@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">172.16.62.190</domain>
+        <!-- Add other domains as needed -->
+        <domain includeSubdomains="true">192.168.100.17</domain>
+
+        localhost:100
+    </domain-config>
+</network-security-config>
