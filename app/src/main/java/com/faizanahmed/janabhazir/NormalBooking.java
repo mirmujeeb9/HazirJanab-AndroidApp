@@ -104,5 +104,7 @@ public class NormalBooking {
     public void setServiceId(int serviceId) {
         this.serviceId = serviceId;
     }
+
+
 }
 

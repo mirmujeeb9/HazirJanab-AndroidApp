@@ -2,6 +2,7 @@ package com.faizanahmed.janabhazir;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firestore.v1.Cursor;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -77,7 +79,6 @@ public class userProfile_6 extends AppCompatActivity {
             Toast.makeText(this, "Error loading user data", Toast.LENGTH_SHORT).show();
         }
 
-        // ...remaining code...
 
 
 
@@ -126,11 +127,42 @@ public class userProfile_6 extends AppCompatActivity {
             btnSaveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String newName = etInputField1.getText().toString();
+                    String newEmail = etInputField2.getText().toString();
+                    String newPhone = etInputField3.getText().toString();
+
                     Toast.makeText(userProfile_6.this, "Changes Saved", Toast.LENGTH_SHORT).show();
-                    tvName.setText(etInputField1.getText().toString()+ "!");
-                    tvEmail.setText(etInputField2.getText().toString());
-                    tvPhoneNumber.setText(etInputField3.getText().toString());
-                    tvDisplayName.setText(etInputField1.getText().toString());
+
+
+//                    tvName.setText(etInputField1.getText().toString()+ "!");
+//                    tvEmail.setText(etInputField2.getText().toString());
+//                    tvPhoneNumber.setText(etInputField3.getText().toString());
+//                    tvDisplayName.setText(etInputField1.getText().toString());
+
+
+                    if (newName != null && !newName.isEmpty()) {
+                        tvName.setText(etInputField1.getText().toString()+ "!");
+
+                        UserDataSingleton.getInstance().updateUserData("First_name", newName.split(" ")[0]);
+                        UserDataSingleton.getInstance().updateUserData("Last_name", newName.split(" ").length > 1 ? newName.split(" ")[1] : "");
+                    }
+
+                    if (newEmail != null && !newEmail.isEmpty()) {
+                        UserDataSingleton.getInstance().updateUserData("Email", newEmail);
+                        tvEmail.setText(etInputField2.getText().toString());
+
+                    }
+
+                    if (newPhone != null && !newPhone.isEmpty()) {
+                        tvPhoneNumber.setText(etInputField3.getText().toString());
+                        UserDataSingleton.getInstance().updateUserData("phone_number", newPhone);
+                    }
+
+                   // UserDataSingleton userDataSingleton = UserDataSingleton.getInstance();
+                    //JSONObject userData = userDataSingleton.getUserData();
+                    //Log.d("AnotherClass", "User data: " + userData.toString());
+
+
                     dialog.dismiss();
                 }
             });
@@ -144,22 +176,54 @@ public class userProfile_6 extends AppCompatActivity {
             btnSaveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tvUsername.setText(etInputField1.getText().toString());
-                    tvPassword.setText(etInputField2.getText().toString());
+                    String newUsername = etInputField1.getText().toString();
+                    String newPassword = etInputField2.getText().toString();
+                   // tvUsername.setText(etInputField1.getText().toString());
+                    //tvPassword.setText(etInputField2.getText().toString());
+
+                    if (newUsername != null && !newUsername.isEmpty()) {
+                        tvUsername.setText(etInputField1.getText().toString());
+
+                        UserDataSingleton.getInstance().updateUserData("Email", newUsername); // Assuming 'Email' is used as the usernam
+
+                    }
+                    if (newPassword != null && !newPassword.isEmpty()) {
+                        tvPassword.setText(etInputField2.getText().toString());
+
+                        UserDataSingleton.getInstance().updateUserData("Password", newPassword);
+
+                    }
+                    UserDataSingleton userDataSingleton = UserDataSingleton.getInstance();
+                    JSONObject userData = userDataSingleton.getUserData();
+                    Log.d("AnotherClass", "User data: " + userData.toString());
+
+
+                    //UserDataSingleton.getInstance().updateUserData("Email", newUsername); // Assuming 'Email' is used as the username
+                  //  UserDataSingleton.getInstance().updateUserData("Password", newPassword);
+
                     dialog.dismiss();
                 }
             });
             // Load existing account credentials
         } else if (type.equals("address")) {
             tvPopupTitle.setText("Edit Address");
-            etInputField1.setHint("Address");
             etInputField2.setVisibility(View.GONE);
             etInputField3.setVisibility(View.GONE);
 
             btnSaveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tvAddress.setText(etInputField1.getText().toString());
+                    String newaddress = etInputField1.getText().toString();
+
+                    etInputField1.setHint("Address");
+                    if (newaddress != null && !newaddress.isEmpty()) {
+                        tvAddress.setText(etInputField1.getText().toString());
+                        UserDataSingleton.getInstance().updateUserData("address", newaddress);
+                        UserDataSingleton userDataSingleton = UserDataSingleton.getInstance();
+                        JSONObject userData = userDataSingleton.getUserData();
+                        Log.d("AnotherClass", "User data: " + userData.toString());
+
+                    }
                     dialog.dismiss();
                 }
             });

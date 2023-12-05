@@ -4,6 +4,8 @@
         <domain includeSubdomains="true">172.16.62.190</domain>
         <!-- Add other domains as needed -->
         <domain includeSubdomains="true">192.168.100.17</domain>
+        <domain includeSubdomains="true">172.16.63.247</domain>
+
 
         localhost:100
     </domain-config>

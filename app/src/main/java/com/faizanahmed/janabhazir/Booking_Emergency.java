@@ -32,10 +32,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Booking_Emergency extends AppCompatActivity {
-
+    Integer serviceId;
     ImageView imgGallery;
     private final int GALLERY_REQ_CODE = 1;
     private Uri imageUri;
+    private Bitmap bitmap;
+    String serviceType;
     private EditText etAddress, etServiceDescription;
     private Spinner sCityItems;
 
@@ -43,6 +45,17 @@ public class Booking_Emergency extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.booking_emergency);
+         serviceId = getIntent().getIntExtra("serviceId", -100);
+        String serviceName = getIntent().getStringExtra("serviceName");
+        String serviceHourlyRate = getIntent().getStringExtra("serviceHourlyRate");
+        String serviceDescription = getIntent().getStringExtra("serviceDescription");
+        String serviceCity = getIntent().getStringExtra("serviceCity");
+        String serviceCategory = getIntent().getStringExtra("serviceCategory");
+        String serviceImageUrl = getIntent().getStringExtra("serviceImageUrl");
+        String serviceVideoUrl = getIntent().getStringExtra("serviceVideoUrl");
+         serviceType = getIntent().getStringExtra("serviceType");
+        Log.d("serviceIDintent", String.valueOf(serviceId));
+
 
         imgGallery = findViewById(R.id.uploadPicture);
         etAddress = findViewById(R.id.etAddress);
@@ -54,9 +67,8 @@ public class Booking_Emergency extends AppCompatActivity {
         Spinner sService = findViewById(R.id.sServiceItems);
         ArrayList<String> serviceItems = new ArrayList<>();
         // Add services to the list
-        serviceItems.add("Service 1");
-        serviceItems.add("Service 2");
-        serviceItems.add("Service 3");
+        serviceItems.add(serviceName);
+
         // ... Add more services as needed
         ArrayAdapter<String> serviceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, serviceItems);
         serviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -73,6 +85,7 @@ public class Booking_Emergency extends AppCompatActivity {
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cityItems);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sServiceCity.setAdapter(cityAdapter);
+
 
         btnUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +119,7 @@ public class Booking_Emergency extends AppCompatActivity {
             String description = etServiceDescription.getText().toString();
             String city = sCityItems.getSelectedItem().toString();
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.100.17:100/hazirjanab/emergencyform.php",
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.100.17:100/hazirjanab/form.php",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -125,12 +138,16 @@ public class Booking_Emergency extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
                     params.put("user_id", "1");
-                    params.put("service_id", "1");
+                    params.put("service_id", String.valueOf(serviceId));
                     params.put("vendor_id", "1");
                     params.put("city", city);
                     params.put("address", address);
+                    //params.put("date", serviceDate); // changed from service_date to date
+                    // params.put("time", serviceTime); // changed from service_time to time
                     params.put("description", description);
                     params.put("image", encodedImage);
+                    params.put("type", serviceType);
+
                     return params;
                 }
             };

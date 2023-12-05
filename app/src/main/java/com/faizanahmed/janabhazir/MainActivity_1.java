@@ -30,6 +30,11 @@ public class MainActivity_1 extends AppCompatActivity {
     Button btnLogin;
 
     TextView tvSignup;
+    private void navigateToServiceType2() {
+        Intent intent = new Intent(MainActivity_1.this, ServiceType_2.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +46,23 @@ public class MainActivity_1 extends AppCompatActivity {
         btnLogin = findViewById(R.id.BtnLogin);
         tvSignup= findViewById(R.id.tvSignup);
 
+        UserDatabaseHelper dbHelper = new UserDatabaseHelper(this);
+        if (dbHelper.isUserLoggedIn()) {
+            navigateToServiceType2();
+            return;
+        }
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get email and password from EditTexts
-                String email = etEmail.getText().toString();
-                String password = etPassword.getText().toString();
-                // Perform login operation
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
                 new LoginTask().execute(email, password);
+
+
             }
         });
+
+
 
         tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,8 +126,13 @@ public class MainActivity_1 extends AppCompatActivity {
                 if(status == 1) {
                     JSONObject userData = jsonResponse.getJSONObject("UserData");
 
+                    UserDatabaseHelper dbHelper = new UserDatabaseHelper(MainActivity_1.this);
+                    dbHelper.addUser(userData);
+                    dbHelper.logAllUsers();
+
                     // Store user data in singleton class
                     UserDataSingleton.getInstance().setUserData(userData);
+                    // Call this to display the data
 
 
 
